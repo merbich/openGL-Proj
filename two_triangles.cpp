@@ -10,17 +10,17 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 const char* vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+" gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
 const char* fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    " FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\0";
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+" FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"}\0";
 
 int main()
 {
@@ -97,16 +97,19 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
-    };
-    float verticesForRect[] = {
+    float verticesFirst[] = {
+        -0.5f, 0.5f, 0.0f,
+        -0.75f, -0.5f, 0.0f,
+        -0.25f, -0.5f, 0.0f,
+
         0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f
+        0.75f, -0.5f, 0.0f,
+        0.25f, -0.5f, 0.0f,
+    };
+    float verticesSecond[] = {
+        0.5f, 0.5f, 0.0f,
+        0.75f, -0.5f, 0.0f,
+        0.25f, -0.5f, 0.0f,
     };
     unsigned int indices[] = {
         0, 1, 3, // first triangle
@@ -122,14 +125,15 @@ int main()
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // send vertices data to GPU
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesForRect), verticesForRect, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesFirst), verticesFirst, GL_STATIC_DRAW);
+    /*glBufferData(GL_ARRAY_BUFFER, sizeof(verticesSecond), verticesSecond, GL_STATIC_DRAW);*/
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    /*glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -143,8 +147,8 @@ int main()
         // activate program
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        /*glDrawArrays(GL_TRIANGLES, 0, 3);*/
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        /*glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);*/
         glBindVertexArray(VAO);
 
         // check and call events and swap the buffers
