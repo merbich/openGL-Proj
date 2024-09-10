@@ -30,5 +30,61 @@
     <ClCompile Include="shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="textures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrixes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="12_colors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="14_materials.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="15_lightning_maps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="16_lightning_casters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="17_multiple_lights.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model_loading_backpack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="my_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\recource\textures\pink-stone-texture-paint.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\recource\textures\cat-face.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\recource\textures\wooden_container.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\recource\textures\wooden_container_specular.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\recource\textures\emission_map_digitals.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\recource\textures\floor_texture.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\recource\textures\sun_texture.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\recource\textures\grass.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

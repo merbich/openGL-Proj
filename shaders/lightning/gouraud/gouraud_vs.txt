@@ -1,0 +1,37 @@
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal;
+
+out vec3 resultObjColor;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+uniform vec3 lightColor;
+uniform vec3 cameraPos;
+uniform vec3 lightPos;
+
+void main()
+{
+    vec3 Normal = mat3(transpose(inverse(model))) * aNormal; 
+    vec3 objPosition = vec3(model * vec4(aPos, 1.0));
+
+    float ambientStrength = 0.2;
+	vec3 ambient = ambientStrength * lightColor;
+
+	vec3 norm = normalize(Normal);
+	vec3 lightDirection = normalize(lightPos - objPosition);
+	vec3 diffuse = max(dot(norm, lightDirection), 0.0) * lightColor;
+
+	float specularStrength = 1.0;
+	vec3 cameraDirection = normalize(cameraPos - objPosition);
+	vec3 reflectDirection = reflect(-cameraDirection, norm);
+	float spec = pow(max(dot(cameraDirection, reflectDirection), 0.0), 32);
+	vec3 specular = specularStrength * spec * lightColor;
+
+	resultObjColor = (specular + diffuse + ambient);
+
+
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+}

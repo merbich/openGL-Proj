@@ -1,9 +1,13 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec3 position;
+in vec2 TexCoord;
+
+uniform sampler2D ourTexture;
+uniform sampler2D ourTextureCat;
+uniform float opasity;
 
 void main()
 {
-	FragColor = vec4(position, 1.0f);
+	FragColor = mix(texture(ourTexture, TexCoord), texture(ourTextureCat, vec2(-TexCoord.x, TexCoord.y)), opasity);
 }

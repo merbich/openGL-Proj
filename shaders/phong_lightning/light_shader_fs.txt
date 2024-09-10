@@ -1,0 +1,27 @@
+#version 330 core
+out vec4 FragColor;
+
+in vec2 TexCoords;
+
+struct Light {
+	vec3 position;
+
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+};
+
+uniform Light light;
+uniform sampler2D texture1;
+
+void main()
+{
+	vec3 ambient = light.ambient;
+
+	vec3 diffuse = light.diffuse;
+
+	vec3 specular = light.specular;
+
+	vec3 resultObjColor = (specular + diffuse + ambient);
+	FragColor = texture(texture1, TexCoords) * vec4(resultObjColor, 1.0);
+}
