@@ -12,8 +12,9 @@
 #include <MyFiles/moving_camera.h>
 #include <MyFiles/FPPCamera.h>
 
-#include "MyFiles/Functions.cpp"
+#include "functions/Functions.cpp"
 #include "functions/Bezier.cpp"
+//include "./ShadersParametrs";
 #include "functions/ShadersParametrs.cpp"
 
 #include <iostream>
@@ -169,7 +170,7 @@ int main()
     Model backpack("../models/backpack/backpack.obj");
     Model car("../recource/models/lancia/lacia_delta_9.obj");
     //Model polyCar("../recource/models/MyCar.obj");
-    Model tree("../recource/models/tree/Tree1.obj");
+    //Model tree("../recource/models/tree/Tree1.obj");
     //Model tree("../models/tree/Tree1/Tree1.obj");
     //Model donut("../recource/models/donutWOplane.obj");
     // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -266,7 +267,7 @@ int main()
     glBindVertexArray(0);
 
     // bezier surface
-    std::vector<GLuint> indices;
+    std::vector<int> indices;
 
     int resolution = 10; // Number of divisions for u and v
 
@@ -283,7 +284,7 @@ int main()
             indices.push_back(start + resolution + 1);
         }
     }
-    CreateBezierVBO(&BezierVertices, &BezierNormals);
+    CreateBezierVBO(resolution, &BezierVertices, &BezierNormals);
     
 
 
@@ -295,10 +296,10 @@ int main()
     glBindVertexArray(BezierVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, BezierVBO);
-    glBufferData(GL_ARRAY_BUFFER, BeizerData.size() * sizeof(GLfloat), &BeizerData[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, BezierData.size() * sizeof(float), &BezierData[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, BezierEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), &indices[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -310,6 +311,7 @@ int main()
     // loading custom textures
     unsigned int floorTexture = loadMyTexture("../recource/textures/grass.jpg");
     unsigned int sunTexture = loadMyTexture("../recource/textures/sun_texture.jpg");
+    unsigned int flagTexture = loadMyTexture("../recource/textures/flaga.png");
 
     SetConstShaderParametrs(objectShader);
     SetConstShaderParametrs(bezierShader);
@@ -330,8 +332,9 @@ int main()
 
         // render
         // ------
-        if(isDay)
-            glClearColor(0.529f, 0.808f, 0.922f, 1.0f);
+        if (isDay)
+            //glClearColor(0.529f, 0.808f, 0.922f, 1.0f);
+            glClearColor(0.369f, 0.471f, 0.616f, 1.0f);
         else
             glClearColor(0.0f, 0.0f, 0.18f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -345,20 +348,23 @@ int main()
         // bezier surface drawing
         updateBezierControlPoints();
         updateBezierSurface(&BezierVertices, &BezierNormals, resolution);
-        CreateBezierVBO(&BezierVertices, &BezierNormals);
+        CreateBezierVBO(resolution, &BezierVertices, &BezierNormals);
 
+        //objectShader.use();
         glBindBuffer(GL_ARRAY_BUFFER, BezierVBO);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, BeizerData.size() * sizeof(GLfloat), &BeizerData[0]);
-
+        glBufferSubData(GL_ARRAY_BUFFER, 0, BezierData.size() * sizeof(GLfloat), &BezierData[0]);
+        glBindTexture(GL_TEXTURE_2D, flagTexture);
         bezierShader.use();
         glm::mat4 modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, glm::vec3(-3.0f, 2.0f, -5.0f));
-        glm::mat4 scalingMatrix = glm::scale(modelMatrix, glm::vec3 (1.5f, 1.0f, 2.0f));
+        //glm::mat4 scalingMatrix = glm::scale(modelMatrix, glm::vec3 (1.5f, 1.0f, 2.0f));
         bezierShader.setMat4("model", modelMatrix);
         bezierShader.setMat4("projection", projection);
         bezierShader.setMat4("view", view);
+        bezierShader.setBool("isDay", isDay);
+        //bezierShader.setVec3("surfaceColor", 0.0f, 1.0f, 0.0f);
 
-        SetShaderParametrs(bezierShader, isDay, camera.Front, stableCamera.Front, &flashlightsPos, camera.Position);
+        SetShaderParametrs(bezierShader, isDay, camera.Front, stableCamera.Front, &flashLightsPos, camera.Position);
 
         glBindVertexArray(BezierVAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -373,7 +379,7 @@ int main()
         if (choise == FPP)
             FPPcamera.setPositionAndFrontVector(GetMovingObjPosition(), GetMovingObjFrontVector());
        
-        SetShaderParametrs(objectShader, isDay, camera.Front, stableCamera.Front, &flashlightsPos, camera.Position);
+        SetShaderParametrs(objectShader, isDay, camera.Front, stableCamera.Front, &flashLightsPos, camera.Position);
 
         // view/projection transformations
         objectShader.setMat4("projection", projection);
@@ -394,7 +400,7 @@ int main()
         model = glm::translate(model, glm::vec3(3.0f, -1.0f, 0.0f));
         treeShader.setMat4("model", model);
         
-        SetShaderParametrs(treeShader, isDay, camera.Front, stableCamera.Front, &flashlightsPos, camera.Position);
+        SetShaderParametrs(treeShader, isDay, camera.Front, stableCamera.Front, &flashLightsPos, camera.Position);
 
         // view/projection transformations
         treeShader.setMat4("projection", projection);
@@ -403,7 +409,7 @@ int main()
         //-----------------------
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        tree.Draw(treeShader);
+        //tree.Draw(treeShader);
         glDisable(GL_BLEND);
         //-----------------------
 

@@ -58,6 +58,7 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_FLASH_LIGHTS];
 uniform Material material;
 uniform sampler2D texture_diffuse1;
+uniform bool isDay;
 
 // function prototypes
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
@@ -82,12 +83,10 @@ void main()
         result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);    
 
     float depth = LinearizeDepth(gl_FragCoord.z) / far;
-    vec4 depthVec4 = vec4(vec3(pow(depth, 1.4)), 1.0);
+    vec3 fogColor = isDay ? vec3(0.8, 0.8, 0.8) : vec3(0.1, 0.1, 0.1);
+    vec4 depthVec4 = vec4(fogColor * pow(depth, 1.4), 1.0);
+
     vec4 texColor = texture(texture_diffuse1, TexCoords);
-
-    //if(texColor.a < 0.1)
-    //    discard;
-
     FragColor = texColor * vec4(result, 1.0) * (1 - depthVec4) + depthVec4;
    
 }
@@ -165,7 +164,12 @@ vec3 CalcFogginess(vec3 objectColor)
     float fogDensity = 0.5;
     float depth = LinearizeDepth(gl_FragCoord.z) / far;
     float depthVec = exp(-pow(depth * fogDensity, 2.0));
-    vec3 fogColor = vec3(0.902, 0.902, 0.980);
+    //vec3 fogColor = vec3(0.902, 0.902, 0.980);
+    vec3 fogColor;
+    if(isDay)
+        fogColor = vec3(0.902, 0.902, 0.980);
+    else
+        fogColor = vec3(0.2f, 0.2f, 0.2f);
     vec3 result = mix(fogColor, objectColor, depthVec);
     return result;
 }

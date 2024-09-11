@@ -61,6 +61,7 @@
   <ItemGroup>
     <Image Include="..\recource\textures\cat-face.png" />
     <Image Include="..\recource\textures\emission_map_digitals.jpg" />
+    <Image Include="..\recource\textures\flaga.png" />
     <Image Include="..\recource\textures\floor_texture.jpg" />
     <Image Include="..\recource\textures\grass.jpg" />
     <Image Include="..\recource\textures\pink-stone-texture-paint.jpg" />
